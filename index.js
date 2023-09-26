@@ -43,6 +43,22 @@ app.get("/values", async (req, res) => {
   }
 });
 
+app.delete("/values/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await db("values").where({ id }).del();
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Value not found." });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/sign-up", async (req, res) => {
   try {
     const { email, password } = req.body;
