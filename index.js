@@ -14,6 +14,20 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT;
 
+app.post("/add-a-value", async (req, res) => {
+  try {
+    const { value } = req.body;
+
+    const result = await db("values").insert({
+      value,
+    });
+
+    return res.status(201).json({ message: "Value added successfully." });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/sign-up", async (req, res) => {
   try {
     const { email, password } = req.body;
