@@ -28,6 +28,21 @@ app.post("/add-a-value", async (req, res) => {
   }
 });
 
+app.get("/values", async (req, res) => {
+  try {
+    const values = await db("values").select("*");
+
+    const formattedValues = values.map((value) => ({
+      id: value.id,
+      value: value.value,
+    }));
+
+    return res.status(200).json(formattedValues);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/sign-up", async (req, res) => {
   try {
     const { email, password } = req.body;
