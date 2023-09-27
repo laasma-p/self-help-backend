@@ -14,6 +14,23 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT;
 
+app.post("/add-a-therapy-goal", async (req, res) => {
+  try {
+    const { therapyGoal } = req.body;
+
+    const result = await db("therapy_goals").insert({
+      therapy_goal: therapyGoal,
+    });
+
+    return res
+      .status(201)
+      .json({ message: "Therapy goal added successfully." });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/add-a-value", async (req, res) => {
   try {
     const { value } = req.body;
