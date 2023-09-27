@@ -26,7 +26,21 @@ app.post("/add-a-therapy-goal", async (req, res) => {
       .status(201)
       .json({ message: "Therapy goal added successfully." });
   } catch (error) {
-    console.error(error.message);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+app.get("/therapy-goals", async (req, res) => {
+  try {
+    const therapyGoals = await db("therapy_goals").select("*");
+
+    const formattedTherapyGoals = therapyGoals.map((therapyGoal) => ({
+      id: therapyGoal.id,
+      therapyGoal: therapyGoal.therapy_goal,
+    }));
+
+    return res.status(200).json(formattedTherapyGoals);
+  } catch (error) {
     return res.status(500).json({ message: "Internal server error." });
   }
 });
