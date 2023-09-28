@@ -14,6 +14,21 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT;
 
+app.get("/physical-goals", async (req, res) => {
+  try {
+    const physicalGoals = await db("physical_goals").select("*");
+
+    const formattedPhysicalGoals = physicalGoals.map((physicalGoal) => ({
+      id: physicalGoal.id,
+      physicalGoal: physicalGoal.physical_goal,
+    }));
+
+    return res.status(200).json(formattedPhysicalGoals);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/add-a-problem", async (req, res) => {
   try {
     const { problem } = req.body;
