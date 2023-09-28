@@ -14,6 +14,22 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT;
 
+app.post("/add-a-physical-goal", async (req, res) => {
+  try {
+    const { physicalGoal } = req.body;
+
+    const result = await db("physical_goals").insert({
+      physical_goal: physicalGoal,
+    });
+
+    return res
+      .status(201)
+      .json({ message: "Physical goal added successfully." });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/physical-goals", async (req, res) => {
   try {
     const physicalGoals = await db("physical_goals").select("*");
