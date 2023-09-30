@@ -4,6 +4,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const db = require("./db");
+const jwt = require("jsonwebtoken");
+const cookie = require("cookie");
 
 const app = express();
 dotenv.config();
@@ -186,7 +188,29 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password." });
     }
 
-    return res.status(200).json({ message: "Login successful" });
+    const userId = user.id;
+
+    const token = jwt.sign(
+      {
+        userId: userId,
+        email: user.email,
+      },
+      process.env.SECRET,
+      {
+        expiresIn: "2h",
+      }
+    );
+
+    const jwtCookie = cookie.serialize("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "test",
+      path: "/",
+    });
+
+    res.setHeader("Set-Cookie", jwtCookie);
+
+    return res.status(200).json({ message: "Login successful", token, userId });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error." });
   }
