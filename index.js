@@ -26,6 +26,23 @@ app.get("/boundaries", async (req, res) => {
   }
 });
 
+app.post("/add-a-boundary", async (req, res) => {
+  try {
+    const { boundary, category } = req.body;
+
+    const result = await db("boundaries").insert({
+      boundary,
+      category,
+    });
+
+    return res.status(201).json({
+      message: "Boundary added successfully.",
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/add-a-physical-goal", async (req, res) => {
   try {
     const { physicalGoal } = req.body;
