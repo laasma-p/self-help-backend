@@ -134,6 +134,22 @@ app.get("/therapy-goals", async (req, res) => {
   }
 });
 
+app.delete("/therapy-goals/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await db("therapy_goals").where({ id }).del();
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Therapy goal not found." });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/add-a-value", async (req, res) => {
   try {
     const { value } = req.body;
