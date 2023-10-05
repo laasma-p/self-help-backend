@@ -76,6 +76,22 @@ app.get("/physical-goals", async (req, res) => {
   }
 });
 
+app.delete("/physical-goals/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await db("physical_goals").where({ id }).del();
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Physical goal not found." });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/add-a-problem", async (req, res) => {
   try {
     const { problem, userId } = req.body;
