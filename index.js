@@ -28,11 +28,12 @@ app.get("/boundaries", async (req, res) => {
 
 app.post("/add-a-boundary", async (req, res) => {
   try {
-    const { boundary, category } = req.body;
+    const { boundary, category, userId } = req.body;
 
     const result = await db("boundaries").insert({
       boundary,
       category,
+      user_id: userId,
     });
 
     return res.status(201).json({
@@ -45,10 +46,11 @@ app.post("/add-a-boundary", async (req, res) => {
 
 app.post("/add-a-physical-goal", async (req, res) => {
   try {
-    const { physicalGoal } = req.body;
+    const { physicalGoal, userId } = req.body;
 
     const result = await db("physical_goals").insert({
       physical_goal: physicalGoal,
+      user_id: userId,
     });
 
     return res
@@ -76,10 +78,11 @@ app.get("/physical-goals", async (req, res) => {
 
 app.post("/add-a-problem", async (req, res) => {
   try {
-    const { problem } = req.body;
+    const { problem, userId } = req.body;
 
     const result = await db("problems").insert({
       problem,
+      user_id: userId,
     });
 
     return res.status(201).json({ message: "Problem added successfully." });
@@ -105,10 +108,11 @@ app.get("/problems", async (req, res) => {
 
 app.post("/add-a-therapy-goal", async (req, res) => {
   try {
-    const { therapyGoal } = req.body;
+    const { therapyGoal, userId } = req.body;
 
     const result = await db("therapy_goals").insert({
       therapy_goal: therapyGoal,
+      user_id: userId,
     });
 
     return res
@@ -152,10 +156,11 @@ app.delete("/therapy-goals/:id", async (req, res) => {
 
 app.post("/add-a-value", async (req, res) => {
   try {
-    const { value } = req.body;
+    const { value, userId } = req.body;
 
     const result = await db("values").insert({
       value,
+      user_id: userId,
     });
 
     return res.status(201).json({ message: "Value added successfully." });
