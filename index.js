@@ -106,6 +106,22 @@ app.get("/problems", async (req, res) => {
   }
 });
 
+app.delete("/problems/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await db("problems").where({ id }).del();
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Problem not found." });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/add-a-therapy-goal", async (req, res) => {
   try {
     const { therapyGoal, userId } = req.body;
