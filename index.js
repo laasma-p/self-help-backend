@@ -44,6 +44,22 @@ app.post("/add-a-boundary", async (req, res) => {
   }
 });
 
+app.delete("/boundaries/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await db("boundaries").where({ id }).del();
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Boundary not found." });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.post("/add-a-physical-goal", async (req, res) => {
   try {
     const { physicalGoal, userId } = req.body;
