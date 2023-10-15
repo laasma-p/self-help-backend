@@ -178,9 +178,10 @@ app.delete("/problems/:id", async (req, res) => {
   }
 });
 
-app.post("/add-a-therapy-goal", async (req, res) => {
+app.post("/add-a-therapy-goal/:userId", async (req, res) => {
   try {
-    const { therapyGoal, userId } = req.body;
+    const { therapyGoal } = req.body;
+    const userId = req.params.userId;
 
     const result = await db("therapy_goals").insert({
       therapy_goal: therapyGoal,
@@ -195,9 +196,13 @@ app.post("/add-a-therapy-goal", async (req, res) => {
   }
 });
 
-app.get("/therapy-goals", async (req, res) => {
+app.get("/therapy-goals/:userId", async (req, res) => {
   try {
-    const therapyGoals = await db("therapy_goals").select("*");
+    const userId = req.params.userId;
+
+    const therapyGoals = await db("therapy_goals")
+      .where({ user_id: userId })
+      .select("*");
 
     const formattedTherapyGoals = therapyGoals.map((therapyGoal) => ({
       id: therapyGoal.id,
@@ -210,7 +215,7 @@ app.get("/therapy-goals", async (req, res) => {
   }
 });
 
-app.delete("/therapy-goals/:id", async (req, res) => {
+app.delete("/therapy-goals/:userId/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
