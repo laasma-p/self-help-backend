@@ -16,6 +16,30 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT;
 
+app.use((req, res, next) => {
+  if (req.path === "/login" || req.path === "/sign-up") {
+    return next();
+  }
+
+  const token =
+    req.headers.authorization && req.headers.authorization.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  jwt.verify(token, process.env.SECRET, (error, decoded) => {
+    if (error) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    req.user = {
+      userId: decoded.userId,
+      email: decoded.email,
+    };
+    next();
+  });
+});
+
 app.get("/boundaries", async (req, res) => {
   try {
     const boundaries = await db("boundaries").select("*");
