@@ -40,9 +40,13 @@ app.use((req, res, next) => {
   });
 });
 
-app.get("/boundaries", async (req, res) => {
+app.get("/boundaries/:userId", async (req, res) => {
   try {
-    const boundaries = await db("boundaries").select("*");
+    const userId = req.params.userId;
+
+    const boundaries = await db("boundaries")
+      .where({ user_id: userId })
+      .select("*");
 
     return res.status(200).json(boundaries);
   } catch (error) {
@@ -50,9 +54,10 @@ app.get("/boundaries", async (req, res) => {
   }
 });
 
-app.post("/add-a-boundary", async (req, res) => {
+app.post("/add-a-boundary/:userId", async (req, res) => {
   try {
-    const { boundary, category, userId } = req.body;
+    const { boundary, category } = req.body;
+    const userId = req.params.userId;
 
     const result = await db("boundaries").insert({
       boundary,
@@ -68,7 +73,7 @@ app.post("/add-a-boundary", async (req, res) => {
   }
 });
 
-app.delete("/boundaries/:id", async (req, res) => {
+app.delete("/boundaries/:userId/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
