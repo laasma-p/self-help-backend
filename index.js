@@ -132,9 +132,10 @@ app.delete("/physical-goals/:id", async (req, res) => {
   }
 });
 
-app.post("/add-a-problem", async (req, res) => {
+app.post("/add-a-problem/:userId", async (req, res) => {
   try {
-    const { problem, userId } = req.body;
+    const { problem } = req.body;
+    const userId = req.params.userId;
 
     const result = await db("problems").insert({
       problem,
@@ -147,9 +148,13 @@ app.post("/add-a-problem", async (req, res) => {
   }
 });
 
-app.get("/problems", async (req, res) => {
+app.get("/problems/:userId", async (req, res) => {
   try {
-    const problems = await db("problems").select("*");
+    const userId = req.params.userId;
+
+    const problems = await db("problems")
+      .where({ user_id: userId })
+      .select("*");
 
     const formattedProblems = problems.map((problem) => ({
       id: problem.id,
@@ -162,7 +167,7 @@ app.get("/problems", async (req, res) => {
   }
 });
 
-app.delete("/problems/:id", async (req, res) => {
+app.delete("/problems/:userId/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
