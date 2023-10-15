@@ -84,9 +84,10 @@ app.delete("/boundaries/:id", async (req, res) => {
   }
 });
 
-app.post("/add-a-physical-goal", async (req, res) => {
+app.post("/add-a-physical-goal/:userId", async (req, res) => {
   try {
-    const { physicalGoal, userId } = req.body;
+    const { physicalGoal } = req.body;
+    const userId = req.params.userId;
 
     const result = await db("physical_goals").insert({
       physical_goal: physicalGoal,
@@ -101,9 +102,13 @@ app.post("/add-a-physical-goal", async (req, res) => {
   }
 });
 
-app.get("/physical-goals", async (req, res) => {
+app.get("/physical-goals/:userId", async (req, res) => {
   try {
-    const physicalGoals = await db("physical_goals").select("*");
+    const userId = req.params.userId;
+
+    const physicalGoals = await db("physical_goals")
+      .where({ user_id: userId })
+      .select("*");
 
     const formattedPhysicalGoals = physicalGoals.map((physicalGoal) => ({
       id: physicalGoal.id,
@@ -116,7 +121,7 @@ app.get("/physical-goals", async (req, res) => {
   }
 });
 
-app.delete("/physical-goals/:id", async (req, res) => {
+app.delete("/physical-goals/:userId/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
