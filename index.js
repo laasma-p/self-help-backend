@@ -226,9 +226,10 @@ app.delete("/therapy-goals/:id", async (req, res) => {
   }
 });
 
-app.post("/add-a-value", async (req, res) => {
+app.post("/add-a-value/:userId", async (req, res) => {
   try {
-    const { value, userId } = req.body;
+    const { value } = req.body;
+    const userId = req.params.userId;
 
     const result = await db("values").insert({
       value,
@@ -241,9 +242,11 @@ app.post("/add-a-value", async (req, res) => {
   }
 });
 
-app.get("/values", async (req, res) => {
+app.get("/values/:userId", async (req, res) => {
   try {
-    const values = await db("values").select("*");
+    const userId = req.params.userId;
+
+    const values = await db("values").where({ user_id: userId }).select("*");
 
     const formattedValues = values.map((value) => ({
       id: value.id,
@@ -256,7 +259,7 @@ app.get("/values", async (req, res) => {
   }
 });
 
-app.delete("/values/:id", async (req, res) => {
+app.delete("/values/:userId/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
