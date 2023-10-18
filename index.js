@@ -297,7 +297,7 @@ app.delete("/values/:userId/:id", async (req, res) => {
 
 app.post("/sign-up", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
@@ -305,6 +305,8 @@ app.post("/sign-up", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const result = await db("users").insert({
+      first_name: firstName,
+      last_name: lastName,
       email,
       password: hashedPassword,
     });
