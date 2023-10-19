@@ -40,6 +40,26 @@ app.use((req, res, next) => {
   });
 });
 
+app.put("/track-boundary/:userId/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.params.userId;
+    const startTrackingTime = new Date();
+
+    const result = await db("boundaries")
+      .where({ id, user_id: userId })
+      .update({ is_tracking: true, added_date: startTrackingTime });
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Boundary not found." });
+    }
+
+    return res.status(200).json({ message: "Boundary is now being tracked." });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/recent-boundaries/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
