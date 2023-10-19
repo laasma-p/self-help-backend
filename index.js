@@ -40,6 +40,20 @@ app.use((req, res, next) => {
   });
 });
 
+app.get("/tracked-boundaries/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const trackedBoundaries = await db("boundaries")
+      .where({ user_id: userId, is_tracking: true })
+      .select("*");
+
+    return res.status(200).json(trackedBoundaries);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.put("/track-boundary/:userId/:id", async (req, res) => {
   try {
     const { id } = req.params;
