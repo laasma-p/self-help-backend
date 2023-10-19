@@ -40,6 +40,29 @@ app.use((req, res, next) => {
   });
 });
 
+app.get("/boundary-count/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const myBoundariesCount = await db("boundaries")
+      .where({ user_id: userId, category: "my-boundary" })
+      .count("* as count")
+      .first();
+
+    const othersBoundariesCount = await db("boundaries")
+      .where({ user_id: userId, category: "others-boundary" })
+      .count("* as count")
+      .first();
+
+    return res.status(200).json({
+      myBoundariesCount: myBoundariesCount.count,
+      othersBoundariesCount: othersBoundariesCount.count,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/boundaries/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -59,10 +82,13 @@ app.post("/add-a-boundary/:userId", async (req, res) => {
     const { boundary, category } = req.body;
     const userId = req.params.userId;
 
+    const dateAdded = new Date();
+
     const result = await db("boundaries").insert({
       boundary,
       category,
       user_id: userId,
+      date_added: dateAdded,
     });
 
     return res.status(201).json({
