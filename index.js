@@ -40,6 +40,21 @@ app.use((req, res, next) => {
   });
 });
 
+app.get("/recent-boundaries/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const recentBoundaries = await db("boundaries")
+      .where({ user_id: userId })
+      .orderBy("id", "desc")
+      .limit(3);
+
+    return res.status(200).json(recentBoundaries);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/boundary-count/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
