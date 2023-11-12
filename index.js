@@ -128,14 +128,13 @@ app.get("/boundaries/:userId", async (req, res) => {
 
 app.post("/add-a-boundary/:userId", async (req, res) => {
   try {
-    const { boundary, category } = req.body;
+    const { boundary } = req.body;
     const userId = req.params.userId;
 
     const dateAdded = new Date();
 
     const result = await db("boundaries").insert({
       boundary,
-      category,
       user_id: userId,
       date_added: dateAdded,
     });
