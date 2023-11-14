@@ -93,19 +93,13 @@ app.get("/boundary-count/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    const myBoundariesCount = await db("boundaries")
-      .where({ user_id: userId, category: "my-boundary" })
-      .count("* as count")
-      .first();
-
-    const othersBoundariesCount = await db("boundaries")
-      .where({ user_id: userId, category: "others-boundary" })
+    const boundariesCount = await db("boundaries")
+      .where({ user_id: userId })
       .count("* as count")
       .first();
 
     return res.status(200).json({
-      myBoundariesCount: myBoundariesCount.count,
-      othersBoundariesCount: othersBoundariesCount.count,
+      boundariesCount: boundariesCount.count,
     });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error." });
