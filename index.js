@@ -367,6 +367,14 @@ app.post("/sign-up", async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
+    const existingUser = await db("users").where({ email }).first();
+
+    if (existingUser) {
+      return res
+        .status(409)
+        .json({ message: "User with the email is already registered." });
+    }
+
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
 
