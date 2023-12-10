@@ -40,6 +40,27 @@ app.use((req, res, next) => {
   });
 });
 
+app.post("/add-a-diary-card/:userId", async (req, res) => {
+  try {
+    const { diaryCard } = req.body;
+    const userId = req.params.userId;
+
+    const result = await db("diary_cards").insert({
+      date: diaryCard.date,
+      suicidal_ideation: diaryCard.suicidalIdeation,
+      exercise: diaryCard.exercise,
+      self_care: diaryCard.selfCare,
+      skill: diaryCard.skill,
+      comments: diaryCard.comments,
+      user_id: userId,
+    });
+
+    return res.status(201).json({ message: "Diary card added successfully." });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/diary-cards/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
