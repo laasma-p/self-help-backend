@@ -40,6 +40,20 @@ app.use((req, res, next) => {
   });
 });
 
+app.get("/diary-cards/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const diaryCards = await db("diary_cards")
+      .where({ user_id: userId })
+      .select("*");
+
+    return res.status(200).json(diaryCards);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/tracked-boundaries/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
