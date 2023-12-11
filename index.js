@@ -53,6 +53,7 @@ app.post("/add-a-diary-card/:userId", async (req, res) => {
       skill: diaryCard.skill,
       comments: diaryCard.comments,
       user_id: userId,
+      created_at: new Date(),
     });
 
     return res.status(201).json({ message: "Diary card added successfully." });
