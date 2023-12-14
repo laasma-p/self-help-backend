@@ -6,7 +6,6 @@ const bcrypt = require("bcrypt");
 const db = require("./db");
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie");
-const cron = require("node-cron");
 
 const app = express();
 dotenv.config();
@@ -16,21 +15,6 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const PORT = process.env.PORT;
-
-cron.schedule("0 0 * * *", async () => {
-  try {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-    await db("diary_cards").where("created_at", "<", thirtyDaysAgo).del();
-
-    return res
-      .status(201)
-      .json({ message: "Diary card deleted successfully." });
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error." });
-  }
-});
 
 app.use((req, res, next) => {
   if (req.path === "/login" || req.path === "/sign-up") {
