@@ -50,7 +50,7 @@ app.post("/add-a-diary-card/:userId", async (req, res) => {
       suicidal_ideation: diaryCard.suicidalIdeation,
       exercise: diaryCard.exercise,
       self_care: diaryCard.selfCare,
-      skill: diaryCard.skill,
+      skills: diaryCard.skills,
       comments: diaryCard.comments,
       user_id: userId,
       created_at: new Date(),
