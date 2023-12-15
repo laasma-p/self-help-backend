@@ -68,7 +68,8 @@ app.get("/diary-cards/:userId", async (req, res) => {
 
     const diaryCards = await db("diary_cards")
       .where({ user_id: userId })
-      .select("*");
+      .select("*")
+      .orderBy("created_at", "desc");
 
     return res.status(200).json(diaryCards);
   } catch (error) {
@@ -148,7 +149,8 @@ app.get("/boundaries/:userId", async (req, res) => {
 
     const boundaries = await db("boundaries")
       .where({ user_id: userId })
-      .select("*");
+      .select("*")
+      .orderBy("date_added", "desc");
 
     return res.status(200).json(boundaries);
   } catch (error) {
@@ -240,7 +242,8 @@ app.get("/physical-goals/:userId", async (req, res) => {
 
     const physicalGoals = await db("physical_goals")
       .where({ user_id: userId })
-      .select("*");
+      .select("*")
+      .orderBy("date_added", "desc");
 
     const formattedPhysicalGoals = physicalGoals.map((physicalGoal) => ({
       id: physicalGoal.id,
@@ -313,7 +316,8 @@ app.get("/problems/:userId", async (req, res) => {
 
     const problems = await db("problems")
       .where({ user_id: userId })
-      .select("*");
+      .select("*")
+      .orderBy("date_added", "desc");
 
     const formattedProblems = problems.map((problem) => ({
       id: problem.id,
@@ -390,7 +394,8 @@ app.get("/therapy-goals/:userId", async (req, res) => {
 
     const therapyGoals = await db("therapy_goals")
       .where({ user_id: userId })
-      .select("*");
+      .select("*")
+      .orderBy("date_added", "desc");
 
     const formattedTherapyGoals = therapyGoals.map((therapyGoal) => ({
       id: therapyGoal.id,
@@ -440,7 +445,10 @@ app.get("/values/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    const values = await db("values").where({ user_id: userId }).select("*");
+    const values = await db("values")
+      .where({ user_id: userId })
+      .select("*")
+      .orderBy("date_added", "desc");
 
     const formattedValues = values.map((value) => ({
       id: value.id,
