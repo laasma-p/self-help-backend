@@ -201,6 +201,7 @@ app.post("/add-a-physical-goal/:userId", async (req, res) => {
     const result = await db("physical_goals").insert({
       physical_goal: physicalGoal,
       user_id: userId,
+      is_done: false,
     });
 
     return res
@@ -222,6 +223,7 @@ app.get("/physical-goals/:userId", async (req, res) => {
     const formattedPhysicalGoals = physicalGoals.map((physicalGoal) => ({
       id: physicalGoal.id,
       physicalGoal: physicalGoal.physical_goal,
+      isDone: physicalGoal.is_done,
     }));
 
     return res.status(200).json(formattedPhysicalGoals);
@@ -254,6 +256,7 @@ app.post("/add-a-problem/:userId", async (req, res) => {
     const result = await db("problems").insert({
       problem,
       user_id: userId,
+      is_done: false,
     });
 
     return res.status(201).json({ message: "Problem added successfully." });
@@ -273,6 +276,7 @@ app.get("/problems/:userId", async (req, res) => {
     const formattedProblems = problems.map((problem) => ({
       id: problem.id,
       problem: problem.problem,
+      isDone: problem.is_done,
     }));
 
     return res.status(200).json(formattedProblems);
@@ -305,6 +309,7 @@ app.post("/add-a-therapy-goal/:userId", async (req, res) => {
     const result = await db("therapy_goals").insert({
       therapy_goal: therapyGoal,
       user_id: userId,
+      is_done: false,
     });
 
     return res
@@ -326,6 +331,7 @@ app.get("/therapy-goals/:userId", async (req, res) => {
     const formattedTherapyGoals = therapyGoals.map((therapyGoal) => ({
       id: therapyGoal.id,
       therapyGoal: therapyGoal.therapy_goal,
+      isDone: therapyGoal.is_done,
     }));
 
     return res.status(200).json(formattedTherapyGoals);
