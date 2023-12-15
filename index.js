@@ -212,6 +212,28 @@ app.post("/add-a-physical-goal/:userId", async (req, res) => {
   }
 });
 
+app.put("/update-physical-goal/:userId/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.params.userId;
+    const { isDone } = req.body;
+
+    const result = await db("physical_goals")
+      .where({ id, user_id: userId })
+      .update({ is_done: isDone });
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Physical goal not found." });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Physical goal updated successfully." });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/physical-goals/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
