@@ -77,6 +77,23 @@ app.get("/diary-cards/:userId", async (req, res) => {
   }
 });
 
+app.get("/check-diary-card-date/:userId/:date", async (req, res) => {
+  try {
+    const { userId, date } = req.params;
+
+    const existingDiaryCard = await db("diary_cards")
+      .where({ user_id: userId, date })
+      .select("*")
+      .first();
+
+    return res.status(200).json({
+      hasDiaryCardForToday: !!existingDiaryCard,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/tracked-boundaries/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
