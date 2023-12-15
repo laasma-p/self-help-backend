@@ -320,6 +320,28 @@ app.post("/add-a-therapy-goal/:userId", async (req, res) => {
   }
 });
 
+app.put("/update-therapy-goal/:userId/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.params.userId;
+    const { isDone } = req.body;
+
+    const result = await db("therapy_goals")
+      .where({ id, user_id: userId })
+      .update({ is_done: isDone });
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Therapy goal not found." });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Therapy goal updated successfully." });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/therapy-goals/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
