@@ -265,6 +265,26 @@ app.post("/add-a-problem/:userId", async (req, res) => {
   }
 });
 
+app.put("/update-problem/:userId/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.params.userId;
+    const { isDone } = req.body;
+
+    const result = await db("problems")
+      .where({ id, user_id: userId })
+      .update({ is_done: isDone });
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Problem not found." });
+    }
+
+    return res.status(200).json({ message: "Problem updated successfully." });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/problems/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
