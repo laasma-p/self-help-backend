@@ -94,6 +94,22 @@ app.get("/check-diary-card-date/:userId/:date", async (req, res) => {
   }
 });
 
+app.delete("/diary-cards/:userId/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await db("diary_cards").where({ id }).del();
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Diary card not found." });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 app.get("/tracked-boundaries/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
