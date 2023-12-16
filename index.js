@@ -69,7 +69,7 @@ app.get("/diary-cards/:userId", async (req, res) => {
     const diaryCards = await db("diary_cards")
       .where({ user_id: userId })
       .select("*")
-      .orderBy("created_at", "desc");
+      .orderBy("created_at", "asc");
 
     return res.status(200).json(diaryCards);
   } catch (error) {
